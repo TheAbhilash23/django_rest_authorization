@@ -1,0 +1,98 @@
+"""
+Write model here that
+"""
+import re
+
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from rest_authorization.app_settings import REST_AUTHORIZATION
+from regex_field.fields import RegexField
+User = get_user_model()
+
+
+# Create your models here.
+
+
+class Application(models.Model):
+    name = models.CharField(
+        _("Application Name"),
+        max_length=100,
+    )
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        db_table = 'application'
+        verbose_name = _('Application')
+        verbose_name_plural = _('Applications')
+
+
+class View(models.Model):
+    name = models.CharField(
+        _("View Name"),
+        max_length=100,
+    )
+    application = models.ForeignKey(
+        Application,
+        on_delete=models.CASCADE,
+        related_name='applications'
+    )
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        db_table = 'view'
+        verbose_name = _('View')
+        verbose_name_plural = _('Views')
+
+
+class ActionMethod(models.Model):
+    name = models.CharField(
+        _("Action Name"),
+        max_length=100,
+    )
+    method = models.CharField(
+        _("Action Method"),
+        choices=REST_AUTHORIZATION['request_method_choices'],
+        max_length=10,
+    )
+    view = models.ForeignKey(
+        View,
+        on_delete=models.CASCADE,
+        related_name='views'
+    )
+    url_pattern = models.CharField(
+        _("URL Pattern"),
+        max_length=200,
+    )
+    users = models.ManyToManyField(
+        User,
+        verbose_name=_("Users Rest API Permissible"),
+        blank=True,
+        help_text=_("Specific permissions for this user."),
+        related_name="user_rest_auth_set",
+        related_query_name="user_rest_auth",
+    )
+
+    def __str__(self):
+        return (
+            f'{self.method.upper()} '
+            f'{self.view.application}.'
+            f'{self.view}.'
+            f'{self.name.lower()} '
+        )
+
+    class Meta:
+        db_table = 'action_method'
+        verbose_name = _('Action Method')
+        verbose_name_plural = _('Action Methods')
+
+    @classmethod
+    def search_url_pattern(cls, path: str, user: User | None = None) -> bool:
+        for obj in cls.objects.all():
+            if re.search(obj.url_pattern, path):
+                return True
+        return False
