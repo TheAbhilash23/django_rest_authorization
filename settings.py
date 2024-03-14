@@ -189,5 +189,5 @@ REST_AUTH = {
     'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
     'TOKEN_CREATOR': 'dj_rest_auth.utils.default_create_token',
     'JWT_AUTH_COOKIE': 'my-app-auth',
-    # 'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
+    'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
 }
