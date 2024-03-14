@@ -6,8 +6,9 @@ import re
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from rest_authorization.app_settings import REST_AUTHORIZATION
-from regex_field.fields import RegexField
+
 User = get_user_model()
 
 
@@ -91,8 +92,10 @@ class ActionMethod(models.Model):
         verbose_name_plural = _('Action Methods')
 
     @classmethod
-    def search_url_pattern(cls, path: str, user: User | None = None) -> bool:
-        for obj in cls.objects.all():
+    def search_url_pattern(cls, path: str, user: User | None = None, queryset=None) -> bool:
+        if not queryset:
+            queryset = cls.objects.all()
+        for obj in queryset:
             if re.search(obj.url_pattern, path):
                 return True
         return False

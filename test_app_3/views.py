@@ -1,7 +1,6 @@
-from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.exceptions import ValidationError as DRFValidationError  # To avoid mixing between core validation error
+
 from test_app_3 import models
 from test_app_3 import serializers
 

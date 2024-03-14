@@ -163,7 +163,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -189,4 +188,6 @@ REST_AUTH = {
     'JWT_AUTH_HTTPONLY': False,
     'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
     'TOKEN_CREATOR': 'dj_rest_auth.utils.default_create_token',
+    'JWT_AUTH_COOKIE': 'my-app-auth',
+    # 'JWT_AUTH_REFRESH_COOKIE': 'my-refresh-token',
 }
