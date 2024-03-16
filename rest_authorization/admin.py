@@ -10,6 +10,8 @@ class ApplicationAdmin(admin.ModelAdmin):
         'pk'
     )
 
+    readonly_fields = ('name',)
+
 
 @admin.register(models.View)
 class ViewAdmin(admin.ModelAdmin):
@@ -18,6 +20,8 @@ class ViewAdmin(admin.ModelAdmin):
         'application',
         'pk'
     )
+
+    readonly_fields = ('name',)
 
 
 @admin.register(models.ActionMethod)
@@ -30,6 +34,8 @@ class ActionMethodAdmin(admin.ModelAdmin):
         'get_application',
         'pk'
     )
+
+    readonly_fields = ('name',)
 
     def get_application(self, obj):
         return obj.view.application.name  # Replace field_name with the field you want to display

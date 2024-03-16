@@ -5,7 +5,8 @@ from rest_authorization.models import Application, View, ActionMethod
 
 
 def scan_and_make_authorization_routes() -> None:
-    lookup = REST_AUTHORIZATION['urls_to_configure']
+    print('Scan and make authorization routes method invoked...')
+    lookup = REST_AUTHORIZATION['URLS_TO_CONFIGURE']
 
     resolver = get_resolver()
 
@@ -25,7 +26,7 @@ def scan_and_make_authorization_routes() -> None:
                 view_ids.add(view.id)
                 action_methods = pattern.callback.actions
                 for method, action in action_methods.items():
-                    for i, accepted_method in REST_AUTHORIZATION['request_method_choices']:
+                    for i, accepted_method in REST_AUTHORIZATION['REQUEST_METHOD_CHOICES']:
                         print(i, accepted_method, method)
                         if method == accepted_method.lower():
                             am, _ = ActionMethod.objects.get_or_create(
@@ -35,7 +36,7 @@ def scan_and_make_authorization_routes() -> None:
                                 url_pattern=get_object_url_pattern(pattern.pattern._regex, url)
                             )
                             action_method_ids.add(am.id)
-
+            # Avoid duplicates, stale objects that can create confusion
             Application.objects.exclude(pk__in=application_ids).delete()
             View.objects.exclude(pk__in=view_ids).delete()
             ActionMethod.objects.exclude(pk__in=action_method_ids).delete()

@@ -5,6 +5,8 @@ import re
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 from rest_authorization.app_settings import REST_AUTHORIZATION
@@ -57,7 +59,7 @@ class ActionMethod(models.Model):
     )
     method = models.CharField(
         _("Action Method"),
-        choices=REST_AUTHORIZATION['request_method_choices'],
+        choices=REST_AUTHORIZATION['REQUEST_METHOD_CHOICES'],
         max_length=10,
     )
     view = models.ForeignKey(
@@ -99,3 +101,14 @@ class ActionMethod(models.Model):
             if re.search(obj.url_pattern, path):
                 return True
         return False
+
+
+# @staticmethod
+@receiver(post_save, sender='rest_groups.RestGroup')
+@receiver(post_save, sender='rest_authorization.Application')
+@receiver(post_save, sender='rest_authorization.View')
+@receiver(post_save, sender='rest_authorization.ActionMethod')
+def invoke_action_methods(sender, instance, created, *args, **kwargs):
+    from rest_authorization.scan_routes import scan_and_make_authorization_routes
+    print(f'Signal received from :: {sender}')
+    # scan_and_make_authorization_routes()

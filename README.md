@@ -11,8 +11,9 @@
 
 
 ### OPEN TASKS
-#### 1. Currently all request paths are being processed, however it should be processed for only those routes whose parent is mentioned in the app_settings
-#### 2. Currently the permissions queryset is cached in the memory at the start of project and any change in the permissions will reflect on the next restart, therefore need to use post_save signal to reset the value
+#### 1. Currently all request paths are being processed, however it should be processed for only those routes whose parent is mentioned in the app_settings. <span style="color: green;">&#10004;</span>
+#### 2. Handle Permission error in API response directly from middleware without reaching view. <span style="color: green;">&#10004;</span>
+#### 3. Currently the permissions queryset is cached in the memory at the start of project and any change in the permissions will reflect on the next restart, therefore need to use post_save signal to reset the value
 
 ```
 SPECIAL THANKS TO:
